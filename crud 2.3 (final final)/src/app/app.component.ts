@@ -11,6 +11,8 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { Driver } from './models/driver.model';
+import { DriverService } from './services/driver.service';
 
 
 @Component({
@@ -23,6 +25,15 @@ export class AppComponent {
   displayedColumns: string[] = ['Name', 'plateNum', 'Route', 'Email', 'Password', 'Action'];
   dataSource!: MatTableDataSource<any>;
 
+  driver: Driver = {
+    driver_name: '',
+    plate_number:'',
+    bus_route: '',
+    email:'',
+    password:''
+  };
+  submitted = false;
+
   bgImage:string = "assets/bg1.png";
   
 
@@ -30,11 +41,89 @@ export class AppComponent {
   @ViewChild(MatSort) sort!: MatSort;
   personalData: any[] = [];
 
-  constructor(private dialog: MatDialog){
+  constructor(private dialog: MatDialog, private driverService: DriverService){ }
 
+  saveInfo(): void{
+    const data = {
+      driver_name: this.driver.driver_name,
+      plate_number: this.driver.plate_number,
+      bus_route: this.driver.bus_route,
+      email: this.driver.email,
+      password: this.driver.password
+    };
+
+    this.driverService.create(data)
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            this.submitted = true;
+          },
+          error: (e) => console.error(e)
+        });
   }
 
-  saveInfo(){
+  newDriver(): void {
+    this.submitted = false;
+    this.driver = {
+      driver_name: '',
+      plate_number: '',
+      bus_route: '',
+      email: '',
+      password: ''
+    };
+  }
+
+
+  openDialog() {
+    this.dialog.open(DialogComponent, {
+      width:'45%',
+    });
+  }
+
+  
+  editInfo( row: any){
+    const dialogRef = this.dialog.open(DialogComponent,{
+      width: '45%',
+      data: row
+    });
+
+  dialogRef.afterClosed().subscribe(result =>{
+    if (result === 'saved'){
+      //this.cdr.detectChanges();
+      //this.getAllInfo();
+    }
+  })
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  deleteInfo(element: number){
+    // debugger;
+    const data = this.dataSource.data;
+    data.splice (element, 1);
+    this.dataSource.data = data;}
+
+
+    ngOnInit(){
+      const savedData = localStorage.getItem ('personalInfo');
+      //if (savedData){
+        this.dataSource = new MatTableDataSource<any> (savedData? JSON.parse(savedData) : []);
+      }
+    
+      // else {
+      //   this.personalData =[];
+      // }
+    
+}
+
+  /*saveInfo(){
     localStorage.setItem('personalInfo', JSON.stringify(this.personalData));
     //this.cdr.detectChanges();
   }
@@ -53,7 +142,7 @@ export class AppComponent {
 
     this.dataSource.paginator.length = this.dataSource.data.length;
     }
-  }*/
+  }
 
   editInfo( row: any){
     const dialogRef = this.dialog.open(DialogComponent,{
@@ -86,7 +175,7 @@ ngOnInit(){
 
  /* else {
     this.personalData =[];
-  }*/
+  }
 
 deleteInfo(element: number){
   // debugger;
@@ -96,7 +185,7 @@ deleteInfo(element: number){
   
   localStorage.setItem('personalInfo', JSON.stringify(this.dataSource.data));
   }
-}  
+}*/  
 
 
 
