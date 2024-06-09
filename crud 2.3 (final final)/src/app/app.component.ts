@@ -43,6 +43,24 @@ export class AppComponent {
 
   constructor(private dialog: MatDialog, private driverService: DriverService){ }
 
+  ngOnInit(){
+    this.getAllDrivers();
+    // const savedData = localStorage.getItem ('personalInfo');
+    // //if (savedData){
+    //   this.dataSource = new MatTableDataSource<any> (savedData? JSON.parse(savedData) : []);
+    }
+
+    getAllDrivers(){
+      this.driverService.getAll().subscribe({
+        next: (data) => {
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        },
+        error: (e) => console.error (e)
+      });
+    }
+
   saveInfo(): void{
     const data = {
       driver_name: this.driver.driver_name,
@@ -57,6 +75,7 @@ export class AppComponent {
           next: (res) => {
             console.log(res);
             this.submitted = true;
+            this.getAllDrivers();
           },
           error: (e) => console.error(e)
         });
@@ -89,10 +108,11 @@ export class AppComponent {
 
   dialogRef.afterClosed().subscribe(result =>{
     if (result === 'saved'){
+      this.getAllDrivers();
       //this.cdr.detectChanges();
       //this.getAllInfo();
     }
-  })
+  });
   }
 
   applyFilter(event: Event) {
@@ -104,23 +124,20 @@ export class AppComponent {
     }
   }
 
-  deleteInfo(element: number){
+  deleteInfo(id: string){
     // debugger;
-    const data = this.dataSource.data;
-    data.splice (element, 1);
-    this.dataSource.data = data;}
-
-
-    ngOnInit(){
-      const savedData = localStorage.getItem ('personalInfo');
-      //if (savedData){
-        this.dataSource = new MatTableDataSource<any> (savedData? JSON.parse(savedData) : []);
-      }
-    
-      // else {
-      //   this.personalData =[];
-      // }
-    
+    // const data = this.dataSource.data;
+    // data.splice (element, 1);
+    // this.dataSource.data = data;
+    this.driverService.delete(id).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.getAllDrivers();
+      },
+      error: (e) => console.error(e)
+    });
+    }
+   
 }
 
   /*saveInfo(){
