@@ -39,7 +39,7 @@ export class AppComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  personalData: any[] = [];
+  // personalData: any[] = [];
 
   constructor(private dialog: MatDialog, private driverService: DriverService){ }
 
@@ -50,7 +50,7 @@ export class AppComponent {
     //   this.dataSource = new MatTableDataSource<any> (savedData? JSON.parse(savedData) : []);
     }
 
-    getAllDrivers(){
+    getAllDrivers(): void {
       this.driverService.getAll().subscribe({
         next: (data) => {
           this.dataSource = new MatTableDataSource(data);
@@ -124,7 +124,7 @@ export class AppComponent {
     }
   }
 
-  deleteInfo(id: string){
+  deleteInfo(id: any){
     // debugger;
     // const data = this.dataSource.data;
     // data.splice (element, 1);

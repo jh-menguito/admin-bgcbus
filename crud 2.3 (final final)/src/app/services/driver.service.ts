@@ -12,10 +12,14 @@ export class DriverService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any> {
-    return this.http.get(baseUrl);
+  getAll(): Observable<Driver[]> {
+    return this.http.get<Driver[]>(baseUrl);
   }
 
+  get(id: any): Observable<Driver> {
+    return this.http.get<Driver>(`${baseUrl} / ${id}`);
+
+  }
   create(data: any): Observable<any> {
     return this.http.post(baseUrl, data);
   }
@@ -25,6 +29,6 @@ export class DriverService {
   }
 
   delete(id: any): Observable<any> {
-    return this.http.delete(baseUrl);
+    return this.http.delete(`${baseUrl} / ${id}`);
   }
 }
