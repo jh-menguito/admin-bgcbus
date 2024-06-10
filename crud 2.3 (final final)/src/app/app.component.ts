@@ -1,16 +1,11 @@
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
-  MatDialog,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
+  MatDialog
 } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from './dialog/dialog.component';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import { Driver } from './models/driver.model';
 import { DriverService } from './services/driver.service';
 
@@ -21,7 +16,7 @@ import { DriverService } from './services/driver.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'crud2';
+  title = 'BGC Bus Drivers Database';
   displayedColumns: string[] = ['Name', 'plateNum', 'Route', 'Email', 'Password', 'Action'];
   dataSource!: MatTableDataSource<any>;
 
@@ -137,7 +132,7 @@ export class AppComponent {
       error: (e) => console.error(e)
     });
     }
-   
+
 }
 
   /*saveInfo(){
